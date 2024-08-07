@@ -36,7 +36,7 @@ const AddJob = () => {
           buyer:{
             email,
             name: user?.displayName,
-            photo: user?.photo
+            photo: u?.photoURLser
 
           }
         }

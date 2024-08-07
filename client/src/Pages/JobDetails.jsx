@@ -6,6 +6,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import toast from "react-hot-toast";
+   
 
 const JobDetails = () => {
   const [startDate, setStartDate] = useState(new Date());
@@ -21,12 +22,14 @@ const JobDetails = () => {
     deadline,
     min_price,
     max_price,
-    buyer_email  
+    buyer,
+    
+    
   } = job || {}
 
   const handleFormSubmits = async e =>{
     e.preventDefault();
-    if(user?.email === buyer_email) return toast.error('Action not permitted')
+    if(user?.email === buyer?.email) return toast.error('Action not permitted')
     const form = e.target
     const jobId = _id 
     const price = parseFloat(form.price.value)
@@ -35,7 +38,6 @@ const JobDetails = () => {
     const comment = form.comment.value
     const deadline = startDate
     const email = user?.email
-    // const buyer_email = buyer_email
     const status = 'pending'
 
     const bidData = {
@@ -44,15 +46,14 @@ const JobDetails = () => {
       deadline,
       comment,
       email,
-      buyer_email,  
       status,
       job_title,
-      category
+      category,
+      
     }
     
     try {
       const {data} = await axios.post(`${import.meta.env.VITE_API_URL}/bid`,bidData)
-      // const {data} = await axios.post('http://localhost:5000/bid',bidData)
       console.log(data)
 
     }catch(err){
@@ -66,7 +67,7 @@ const JobDetails = () => {
         <div className='flex-1  px-4 py-7 bg-white rounded-md shadow-md md:min-h-[350px]'>
           <div className='flex items-center justify-between'>
             <span className='text-sm font-light text-gray-800 '>
-              Deadline: {deadline}
+              Deadline: {new Date(deadline).toLocaleDateString()}
             </span>
             <span className='px-4 py-1 text-xs text-blue-800 uppercase bg-blue-200 rounded-full '>
              {category}
@@ -86,13 +87,13 @@ const JobDetails = () => {
             </p>
             <div className='flex items-center gap-5'>
               <div>
-                <p className='mt-2 text-sm  text-gray-600 '>Name: Jhankar Vai.</p>
+                <p className='mt-2 text-sm  text-gray-600 '>Name: {buyer?.name}</p>
                 <p className='mt-2 text-sm  text-gray-600 '>
-                  Email: jhankar@mahbub.com
+                  Email: {buyer?.email}
                 </p>
               </div>
               <div className='rounded-full object-cover overflow-hidden w-14 h-14'>
-                <img src='' alt='' />
+                <img src={user?.photoURL} alt='' />
               </div>
             </div>
             <p className='mt-6 text-lg font-bold text-gray-600 '>
