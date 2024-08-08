@@ -36,14 +36,13 @@ const AddJob = () => {
           buyer:{
             email,
             name: user?.displayName,
-            photo: u?.photoURLser
+            photo: user?.photoURL
 
           }
         }
         
         try {
           const {data} = await axios.post(`${import.meta.env.VITE_API_URL}/job`,jobData)
-          // const {data} = await axios.post('http://localhost:5000/bid',bidData)
           console.log(data)
           toast.success('Job data updated successfully.')
           navigate('/my-posted-job')
