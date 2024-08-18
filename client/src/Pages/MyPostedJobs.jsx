@@ -7,8 +7,8 @@ import { Link } from "react-router-dom";
 
 const MyPostedJobs = () => {
 
-    const {user} = useContext(AuthContext)
-    const [jobs, setJobs] = useState([])
+    const {user} = useContext(AuthContext);
+    const [jobs, setJobs] = useState([]);
 
     useEffect(()=>{
         

@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
 
 
+// eslint-disable-next-line react/prop-types
 const Slider = ({image,text}) => {
     return (
       <div
-      className='w-full bg-center bg-cover h-[38rem]'
+      className='w-full bg-center bg-cover h-[30rem] '
       style={{
         backgroundImage: `url(${image})`,
       }}

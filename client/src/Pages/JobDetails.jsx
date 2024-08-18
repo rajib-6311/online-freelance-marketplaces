@@ -10,9 +10,9 @@ import toast from "react-hot-toast";
 
 const JobDetails = () => {
   const [startDate, setStartDate] = useState(new Date());
-  const {user}=useContext(AuthContext)
+  const {user}=useContext(AuthContext);
 
-  const job = useLoaderData()
+  const job = useLoaderData();
 
   const {
     _id,
@@ -22,9 +22,7 @@ const JobDetails = () => {
     deadline,
     min_price,
     max_price,
-    buyer,
-    
-    
+    buyer 
   } = job || {}
 
   const handleFormSubmits = async e =>{
@@ -45,11 +43,12 @@ const JobDetails = () => {
       price,
       deadline,
       comment,
-      email,
-      status,
       job_title,
       category,
-      
+      email,
+      buyer_email: buyer?.email,
+      status,
+      buyer
     }
     
     try {

@@ -7,8 +7,6 @@ const NavBar = () => {
 
     const {user, logOut} = useContext(AuthContext);
 
-
-
     return (
         <div className='navbar bg-slate-300 shadow-sm container px-4 mx-auto'>
       <div className='flex-1'>

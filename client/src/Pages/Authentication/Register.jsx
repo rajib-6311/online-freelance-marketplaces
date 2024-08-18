@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import regImg from "../../assets/images/register.jpg"
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "../../provider/AuthProvider";
 import toast from "react-hot-toast";
 
@@ -15,7 +15,14 @@ const Register = () => {
     user,
     setUser,
     createUser,  
-    updateUserProfile} = useContext(AuthContext)
+    updateUserProfile, loading} = useContext(AuthContext);
+
+    useEffect(()=>{
+      if(user){
+        navigate('/')
+      }
+
+    },[navigate, user])
 
     const handleSignUp = async(e)=>{
       e.preventDefault()
@@ -44,7 +51,7 @@ const Register = () => {
 
     }
 
-
+  if(user || loading) return  
 
     return (
         <div className='flex justify-center items-center min-h-[calc(100vh-306px)] my-12'>

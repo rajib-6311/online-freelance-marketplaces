@@ -58,8 +58,6 @@ async function run() {
     // save a bid data in db
     app.post('/bid', async(req, res)=>{
       const bidData = req.body
-      // console.log(bidData)
-      // return
       const result = await bidsCollection.insertOne(bidData)
       res.send(result)
     })
@@ -67,8 +65,6 @@ async function run() {
     // save a job data in db
     app.post('/job', async(req, res)=>{
       const jobData = req.body
-      // console.log(bidData)
-      // return
       const result = await jobsCollection.insertOne(jobData)
       res.send(result)
     })
@@ -94,7 +90,7 @@ async function run() {
       const id = req.params.id 
       const jobData = req.body
       const query = { _id: new ObjectId(id)}
-      const options = {upsert: true}
+      const options = {upsert: true}   
       const updateDoc = {
         $set :{
           ...jobData,
@@ -102,6 +98,21 @@ async function run() {
       }
       const result = await jobsCollection.updateOne(query, updateDoc, options)
       res.send(result);
+    })
+
+    // get all bids for a user by email form db
+    app.get('/my-bids/:email', async(req, res)=>{
+      const email = req.params.email
+      const query = {email}
+      const result = await bidsCollection.find(query).toArray()
+      res.send(result)
+    })
+    // get all bid requests form db for job owner 
+    app.get('/bid-request/:email', async(req, res)=>{
+      const email = req.params.email
+      const query = {'buyer.email': email}
+      const result = await bidsCollection.find(query).toArray()
+      res.send(result)
     })
 
 

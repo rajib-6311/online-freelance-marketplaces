@@ -1,4 +1,4 @@
-import  { useRef, useState } from 'react';
+// import  { useRef, useState } from 'react';
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -18,7 +18,7 @@ import Slider from './Slider';
 
 export default function Carusol() {
   return (
-    <div className='container px-6 py-8 mx-auto'>
+    <div className='container  py-2 mx-auto'>
       <Swiper
         spaceBetween={30}
         centeredSlides={true}
@@ -28,7 +28,7 @@ export default function Carusol() {
           disableOnInteraction: false,
         }}
         pagination={{
-          clickable: true,
+          clickable: true,  
         }}
         navigation={true}
         modules={[Autoplay, Pagination, Navigation]}
