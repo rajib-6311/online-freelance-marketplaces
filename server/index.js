@@ -1,5 +1,4 @@
 
-
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config()
@@ -19,8 +18,6 @@ const corsOptions ={
 // middlewares
 app.use(cors(corsOptions));
 app.use(express.json())
-
-
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.bgilkf0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
@@ -119,9 +116,7 @@ async function run() {
 }
 run().catch(console.dir);
 
-
-
-    
+  
 app.get('/', (req, res) => {
     res.send('simple server online-freelance-marketplace');
 })
