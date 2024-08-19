@@ -108,7 +108,7 @@ async function run() {
       res.send(result)
     })
     // get all bid requests form db for job owner 
-    app.get('/bid-request/:email', async(req, res)=>{
+    app.get('/bid-requests/:email', async(req, res)=>{
       const email = req.params.email
       const query = {'buyer.email': email}
       const result = await bidsCollection.find(query).toArray()
