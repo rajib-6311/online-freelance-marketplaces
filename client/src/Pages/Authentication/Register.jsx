@@ -3,6 +3,7 @@ import regImg from "../../assets/images/register.jpg"
 import { useContext, useEffect } from "react";
 import { AuthContext } from "../../provider/AuthProvider";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 
 const Register = () => {
@@ -15,7 +16,9 @@ const Register = () => {
     user,
     setUser,
     createUser,  
-    updateUserProfile, loading} = useContext(AuthContext);
+    updateUserProfile,
+    signInWithGoogle
+  } = useContext(AuthContext);
 
     useEffect(()=>{
       if(user){
@@ -38,7 +41,13 @@ const Register = () => {
         const result = await createUser(email, pass)
         console.log(result)
         await updateUserProfile(name, photo)
-        setUser({...user, photoURL: photo , displayName: name})
+        setUser({...result?.user, photoURL: photo , displayName: name})
+
+        // jwt
+        const {data} = await axios.post(`${import.meta.env.VITE_API_URL}/jwt`,{
+            email: result?.user?.email, 
+           }, {withCredentials: true})
+           console.log(data);
         
         navigate(from, {replace: true})
         toast.success('Registration successful')
@@ -46,12 +55,30 @@ const Register = () => {
       }catch(err){
         console.log(err)
         toast.error(err?.message)
-
       }
-
     }
 
-  if(user || loading) return  
+    // Google SignIn 
+    const handelGoogleSignIn = async ()=>{
+      try{
+        const result = await signInWithGoogle()
+        // jwt
+        console.log(result.user)
+        const {data} = await axios.post(`${import.meta.env.VITE_API_URL}/jwt`,{
+            email: result?.user?.email, 
+           }, {withCredentials: true})
+           console.log(data);
+
+        toast.success('Sign in Successfully')   
+        // navigate(form, {replace: true})
+        navigate('/');  
+      }catch (err){
+        console.log(err);
+        toast.error(err?.message)
+      }
+    }
+
+  // if(user || loading) return  
 
     return (
         <div className='flex justify-center items-center min-h-[calc(100vh-306px)] my-12'>
@@ -69,7 +96,9 @@ const Register = () => {
               Get Your Free Account Now.
             </p>
   
-            <div className='flex cursor-pointer items-center justify-center mt-4 text-gray-600 transition-colors duration-300 transform border rounded-lg   hover:bg-gray-50 '>
+            <div
+            onClick={handelGoogleSignIn} 
+             className='flex cursor-pointer items-center justify-center mt-4 text-gray-600 transition-colors duration-300 transform border rounded-lg   hover:bg-gray-50 '>
               <div className='px-4 py-2'>
                 <svg className='w-6 h-6' viewBox='0 0 40 40'>
                   <path

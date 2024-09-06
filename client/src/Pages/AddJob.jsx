@@ -41,7 +41,7 @@ const AddJob = () => {
         }
         
         try {
-          const {data} = await axios.post(`${import.meta.env.VITE_API_URL}/job`,jobData)
+          const {data} = await axios.post(`${import.meta.env.VITE_API_URL}/job`,{withCredentials: true}, jobData)
           console.log(data)
           toast.success('Job data updated successfully.')
           navigate('/my-posted-job')

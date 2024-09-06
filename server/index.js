@@ -1,6 +1,8 @@
 
 const express = require('express');
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser')
 require('dotenv').config()
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 // const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
@@ -17,7 +19,27 @@ const corsOptions ={
 
 // middlewares
 app.use(cors(corsOptions));
-app.use(express.json())
+app.use(express.json());
+app.use(cookieParser());
+
+// verify middleware
+const verifyToken = (req, res, next) => {
+  const token = req.cookies?.token 
+  if(!token) return res.status(401).send({message: 'unauthorized access'})
+
+  if(token){
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded)=>{
+      if(err){
+         console.log(err);
+         return res.status(401).send({message: 'unauthorized access'})
+      }
+      console.log(decoded);
+      req.user = decoded;
+
+      next();
+    } )
+  }
+}
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.bgilkf0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
@@ -38,12 +60,38 @@ async function run() {
     const bidsCollection = client.db('online_freelance').collection('bids')
 
     // Connect the client to the server	(optional starting in v4.7)
+
+    // jwt generated 
+    app.post('/jwt', async (req, res) => {
+      const user = req.body 
+      const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: '7days',
+      })
+      res 
+      .cookie('token', token, {
+        httpOnly : true,
+        secure : process.env.NODE_ENV === 'production',
+        sameSite : process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+      })
+      .send({success : true});
+    })
+
+    // clear token logout 
+    app.get('/logout', (req, res) =>{
+      res 
+      .clearCookie('token', {
+        httpOnly : true,
+        secure : process.env.NODE_ENV === 'production',
+        sameSite : process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+        maxAge : 0,
+      })
+      .send({success : true});
+    })
    
 
     // get all jobs
     app.get('/Jobs',async (req, res)=>{
       const result = await jobsCollection.find().toArray()
-
       res.send(result)
     })
 
@@ -70,15 +118,20 @@ async function run() {
     })
 
     // get all jobs posted by a specific user
-    app.get('/jobs/:email', async(req, res)=>{
+    app.get('/jobs/:email', verifyToken, async(req, res)=>{
+      // jwt
+      const tokenEmail = req.user.email
       const email = req.params.email
+      if (tokenEmail !== email){
+        return res.status(403).send({message: 'forbidden access'})
+      }
       const query = {'buyer.email':email}
       const result = await jobsCollection.find(query).toArray()
       res.send(result)
     })
 
     // delete a job data form db
-    app.delete('/job/:id', async(req, res)=>{
+    app.delete('/job/:id', verifyToken, async(req, res)=>{
       const id = req.params.id
       const query = {_id: new ObjectId(id)}
       const result = await jobsCollection.deleteOne(query)
@@ -86,7 +139,7 @@ async function run() {
     })
 
     // Update a job in db
-    app.put('/job/:id', async(req,res)=>{
+    app.put('/job/:id', verifyToken, async(req,res)=>{
       const id = req.params.id 
       const jobData = req.body
       const query = { _id: new ObjectId(id)}
@@ -101,7 +154,7 @@ async function run() {
     })
 
     // get all bids for a user by email form db
-    app.get('/my-bids/:email', async(req, res)=>{
+    app.get('/my-bids/:email', verifyToken, async(req, res)=>{
       const email = req.params.email
       const query = {email}
       const result = await bidsCollection.find(query).toArray()
