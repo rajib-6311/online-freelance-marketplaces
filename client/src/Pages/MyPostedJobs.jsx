@@ -1,14 +1,15 @@
-import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../provider/AuthProvider";
-import axios from "axios";
+import {useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
+import useAxiosSecure from "../hooks/useAxiosSecure";
+import useAuth from "../hooks/useAuth";
 
 
 const MyPostedJobs = () => {
+  const axiosSecure = useAxiosSecure();
+  const {user} = useAuth();
 
-    const {user} = useContext(AuthContext);
-    const [jobs, setJobs] = useState([]);
+  const [jobs, setJobs] = useState([]);
 
     useEffect(()=>{
         
@@ -16,17 +17,18 @@ const MyPostedJobs = () => {
     }, [user])
 
     const getData = async()=>{
-      const {data} = await axios(`${import.meta.env.VITE_API_URL}/jobs/${user?.email}`, {withCredentials: true})
+      const {data} = await axiosSecure(`/jobs/${user?.email}`
+      )
       setJobs(data)
       }
     
 
     const handleDelete = async id =>{
       try{
-        const {data} = await axios.delete(`${import.meta.env.VITE_API_URL}/job/${id}`)
-      console.log(data)
-      toast.success('Delete Successful')
-      getData()
+        const {data} = await axiosSecure.delete(`/job/${id}`)
+        console.log(data)
+        toast.success('Delete Successful')
+        getData()
       }catch(err){
         console.log(err.message)
         toast.error(err.message)
@@ -35,8 +37,7 @@ const MyPostedJobs = () => {
     return (
         <section className='container px-4 mx-auto pt-12 pb-80'>
         <div className='flex items-center gap-x-3'>
-          <h2 className='text-lg font-medium text-white '>My Posted Jobs</h2>
-  
+          <h2 className='text-lg font-medium text-black'>My Posted Jobs</h2>
           <span className='px-3 py-1 text-xs text-blue-600 bg-blue-100 rounded-full '>
             {jobs.length} Jobs
           </span>

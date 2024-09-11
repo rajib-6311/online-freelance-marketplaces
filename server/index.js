@@ -63,8 +63,8 @@ async function run() {
 
     // jwt generated 
     app.post('/jwt', async (req, res) => {
-      const user = req.body 
-      const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+      const email = req.body 
+      const token = jwt.sign(email, process.env.ACCESS_TOKEN_SECRET, {
         expiresIn: '7days',
       })
       res 
@@ -131,7 +131,7 @@ async function run() {
     })
 
     // delete a job data form db
-    app.delete('/job/:id', verifyToken, async(req, res)=>{
+    app.delete('/job/:id',  async(req, res)=>{
       const id = req.params.id
       const query = {_id: new ObjectId(id)}
       const result = await jobsCollection.deleteOne(query)
@@ -139,7 +139,7 @@ async function run() {
     })
 
     // Update a job in db
-    app.put('/job/:id', verifyToken, async(req,res)=>{
+    app.put('/job/:id', async(req,res)=>{
       const id = req.params.id 
       const jobData = req.body
       const query = { _id: new ObjectId(id)}
@@ -154,8 +154,14 @@ async function run() {
     })
 
     // get all bids for a user by email form db
-    app.get('/my-bids/:email', verifyToken, async(req, res)=>{
+    app.get('/my-bids/:email', verifyToken,  async(req, res)=>{
+      // JWT 
+      // const email = req.params.email
+      const tokenEmail = req.user.email
       const email = req.params.email
+      if (tokenEmail !== email){
+        return res.status(403).send({message: 'forbidden access'})
+      }
       const query = {email}
       const result = await bidsCollection.find(query).toArray()
       res.send(result)
