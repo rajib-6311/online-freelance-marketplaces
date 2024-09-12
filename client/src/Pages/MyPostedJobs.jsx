@@ -9,7 +9,7 @@ const MyPostedJobs = () => {
   const axiosSecure = useAxiosSecure();
   const {user} = useAuth();
 
-  const [jobs, setJobs] = useState([]);
+  const [jobs, setJobs] = useState([]); 
 
     useEffect(()=>{
         

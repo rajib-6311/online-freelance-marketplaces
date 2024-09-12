@@ -14,7 +14,7 @@ const useAxiosSecure = () => {
     // Response interceptors
     axiosSecure.interceptors.response.use(
         res => {
-            console.log('Kaj hoi te se', res);
+            // console.log('Kaj hoi te se', res);
             return res;
         },
         async error => {
