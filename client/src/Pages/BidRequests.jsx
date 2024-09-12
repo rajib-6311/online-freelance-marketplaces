@@ -1,36 +1,48 @@
-
 import useAuth from "../hooks/useAuth";
 import useAxiosSecure from "../hooks/useAxiosSecure";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 const BidRequests = () => {
-
     const {user} = useAuth();
     const axiosSecure = useAxiosSecure()
+    const queryClient = useQueryClient()
 
-    const {data: bids=[], isLoading,isError, error} = useQuery({
+    //For GET data from taskState query 
+    const {data: bids=[],
+       isLoading}= useQuery({
       queryFn: ()=>getData(),
-      queryKey: ['bids'],
+      queryKey: ['bids' , user?.email],
     })
-    console.log(bids)
-    console.log(isLoading)
-
-  //   const [bids , setBids] = useState([]);
-  //   useEffect(()=>{      
-  //     getData()
-  // }, [user])
-  
-  const getData = async()=>{
-    const {data} = await axiosSecure(`/bid-requests/${user?.email}`)
-    return data
+   
+    const getData = async()=>{
+      const {data} = await axiosSecure(`/bid-requests/${user?.email}`)
+      return data
     }
+
+  //  for POST data fetch by taskState query
+    const {mutateAsync} = useMutation({
+      mutationFn: async ({id, status})=>{
+        const {data} = await axiosSecure.patch(`/bid/${id}`, {status})
+        console.log(data)
+        return data 
+      },
+      onSuccess: ()=>{
+        console.log('Wow, data updated successfully')
+        toast.success('Updated')
+
+        // refresh UI for latest data
+        // refetch()
+
+        // refresh other way 
+        queryClient.invalidateQueries({queryKey: ['bids']})
+      }
+    })
 
     // handle status 
     const handleStatus = async(id, prevStatus, status)=>{
       if(prevStatus === status) return console.log('sorry...')
-        const {data} = await axiosSecure.patch(`/bid/${id}`, {status})
-      console.log(data)
-      getData()
+        await mutateAsync({id, status})
     }
 
    if(isLoading) return <p>Data still loading.....</p>
