@@ -2,14 +2,14 @@ import {useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {  useNavigate } from "react-router-dom";
-import axios from "axios";
 import toast from "react-hot-toast";
 import useAuth from "../hooks/useAuth";
-
+import useAxiosSecure from "../hooks/useAxiosSecure";
 
 const AddJob = () => {
     // const {user}=useContext(AuthContext)
     const {user} = useAuth();
+    const axiosSecure = useAxiosSecure();
     const navigate  = useNavigate()
 
     const [startDate, setStartDate] = useState(new Date());
@@ -25,8 +25,7 @@ const AddJob = () => {
         const description = form.description.value
         const deadline = startDate
     
-        const jobData = {
-          
+        const jobData = {         
           job_title,
           category,
           min_price,
@@ -41,7 +40,7 @@ const AddJob = () => {
         }
         
         try {
-          const {data} = await axios.post(`${import.meta.env.VITE_API_URL}/job`,{withCredentials: true}, jobData)
+          const {data} = await axiosSecure.post(`/job`, jobData)
           console.log(data)
           toast.success('Job data updated successfully.')
           navigate('/my-posted-job')

@@ -3,14 +3,14 @@ import regImg from "../../assets/images/register.jpg"
 import { useContext, useEffect } from "react";
 import { AuthContext } from "../../provider/AuthProvider";
 import toast from "react-hot-toast";
-import axios from "axios";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 
 const Register = () => {
-
   const navigate = useNavigate()
   const location = useLocation()
   const from = location.state || '/'
+  const axiosSecure = useAxiosSecure();
 
   const {
     user,
@@ -24,7 +24,6 @@ const Register = () => {
       if(user){
         navigate('/')
       }
-
     },[navigate, user])
 
     const handleSignUp = async(e)=>{
@@ -44,7 +43,7 @@ const Register = () => {
         setUser({...result?.user, photoURL: photo , displayName: name})
 
         // jwt
-        const {data} = await axios.post(`${import.meta.env.VITE_API_URL}/jwt`,{
+        const {data} = await axiosSecure.post(`/jwt`,{
             email: result?.user?.email, 
            }, {withCredentials: true})
            console.log(data);
@@ -64,7 +63,7 @@ const Register = () => {
         const result = await signInWithGoogle()
         // jwt
         console.log(result.user)
-        const {data} = await axios.post(`${import.meta.env.VITE_API_URL}/jwt`,{
+        const {data} = await axiosSecure.post(`/jwt`,{
             email: result?.user?.email, 
            }, {withCredentials: true})
            console.log(data);

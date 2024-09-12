@@ -3,11 +3,12 @@ import loginImg from "../../assets/images/login.jpg"
 import { useContext, useEffect } from "react";
 import { AuthContext } from "../../provider/AuthProvider";
 import toast from 'react-hot-toast'
-import axios from "axios";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const Login = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const axiosSecure = useAxiosSecure();
     const {signIn, signInWithGoogle, user, loading} = useContext(AuthContext);
 
     useEffect(()=>{
@@ -24,9 +25,9 @@ const Login = () => {
         const result = await signInWithGoogle()
         // jwt
         console.log(result.user)
-        const {data} = await axios.post(`${import.meta.env.VITE_API_URL}/jwt`,{
+        const {data} = await axiosSecure.post(`/jwt`,{
             email: result?.user?.email, 
-           }, {withCredentials: true})
+           })
            console.log(data);
         
         navigate(from, {replace: true})
@@ -50,9 +51,9 @@ const Login = () => {
  
         // jwt
         console.log(result.user)
-        const {data} = await axios.post(`${import.meta.env.VITE_API_URL}/jwt`,{
+        const {data} = await axiosSecure.post(`/jwt`,{
             email: result?.user?.email, 
-           }, {withCredentials: true})
+           })
            console.log(data);
 
         
