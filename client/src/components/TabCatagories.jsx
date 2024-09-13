@@ -16,8 +16,7 @@ const TabCategories = () => {
             setJobs(data);
         }
         getData();
-     }, []); // Use an empty dependency array to run the effect only once after the initial render
-
+     }, []); 
 
     return (
         <Tabs>
