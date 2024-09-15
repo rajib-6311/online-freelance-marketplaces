@@ -5,23 +5,14 @@ import JobCard from "../components/JobCard";
 
 const AllJobs = () => {
     const [jobs, setJobs] = useState([]);
-    const [itemPerPage, setItemPerPage] = useState(2)
+    const [itemPerPage, setItemPerPage] = useState(3)
     const [count, setCount] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
      
-
-
     useEffect(() => {
        const getData = async () => {
-          //  const { data } = await axios(
-          //   `${
-          //   import.meta.env.VITE_API_URL}
-          //   /all-jobs?page=${currentPage}&size=${itemPerPage}`
-          // )
           const { data } = await axios(`${import.meta.env.VITE_API_URL}/all-jobs?page=${currentPage}&size=${itemPerPage}`);
-
            setJobs(data)    
-
        }
        getData()
     }, [currentPage, itemPerPage]); 
@@ -35,7 +26,6 @@ const AllJobs = () => {
     }, []); 
     console.log(count)
     
-
         const numberOfPage = Math.ceil(count / itemPerPage)
         const pages = [...Array(numberOfPage).keys()].map(
           element => element + 1
