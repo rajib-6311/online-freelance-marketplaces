@@ -5,7 +5,7 @@ import JobCard from "../components/JobCard";
 
 const AllJobs = () => {
     const [jobs, setJobs] = useState([]);
-    const [itemPerPage, setItemPerPage] = useState(4)
+    const [itemPerPage] = useState(4)
     const [count, setCount] = useState(0);
     const [filter, setFilter] = useState('');
     const [sort, setSort] = useState('');
