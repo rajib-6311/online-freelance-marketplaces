@@ -4,8 +4,8 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
-import img1 from '../assets/images/ca4.jpg'
-import img2 from '../assets/images/ca3.jpg'
+import img1 from '../assets/images/digital.jpg'
+import img2 from '../assets/images/web2.jpg'
 import img3 from '../assets/images/ca2.jpg'
 import img4 from '../assets/images/ca1.jpg'
 

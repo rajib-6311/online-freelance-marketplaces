@@ -11,7 +11,7 @@ const port = process.env.PORT || 5000;
 
 
 const corsOptions ={
-    origin: ['http://localhost:5173', 'http://localhost:5174','online-freelance-marketplace.web.app'],
+    origin: ['http://localhost:5173', 'http://localhost:5174'],
     credentials: true,
     optionSuccessStatus: 200,
 }
@@ -111,16 +111,25 @@ async function run() {
       const query = {
         email: bidData.email,
         jobId: bidData.jobId
-      }
+      };
       const alreadyApplied = await bidsCollection.findOne(query)
       console.log(alreadyApplied)
+
       if(alreadyApplied){
-        res
+        return res
         .status(400)
         .send('You have already placed a bid on this job')
       }
 
       const result = await bidsCollection.insertOne(bidData)
+
+      // update bid count in jobs collection
+      const updateDoc ={
+        $inc: {bid_count: 1},
+      }
+      const jobQuery = {_id: new ObjectId(bidData.jobId)}
+      const updateBidCounts = await jobsCollection.updateOne(jobQuery,updateDoc)
+      console.log(updateBidCounts)
       res.send(result)
     })
 
