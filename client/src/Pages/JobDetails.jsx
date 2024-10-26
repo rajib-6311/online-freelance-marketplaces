@@ -32,7 +32,7 @@ const JobDetails = () => {
     const form = e.target
     const jobId = _id 
     const price = parseFloat(form.price.value)
-    if( price< parseFloat(min_price)) return toast.error('Offer more or at least equal to Minimum price')
+    if( price < parseFloat(min_price)) return toast.error('Offer more or at least equal to Minimum price')
 
     const comment = form.comment.value
     const deadline = startDate
