@@ -14,7 +14,7 @@ const corsOptions ={
     origin: [
       'http://localhost:5173', 
       'http://localhost:5174',
-      'online-freelance-marketplace.web.app', 
+      'https://online-freelance-marketplace.web.app', 
       'https://online-freelance-marketplace.firebaseapp.com',
       
     ],
@@ -59,11 +59,11 @@ const client = new MongoClient(uri, {
   }
 });
 
-const cookeOption = {
-  httpOnly : true,
-  sameSite : process.env.NODE_ENV === 'production' ? 'none' : 'strict',
-  secure : process.env.NODE_ENV === 'production' ? 'true' : 'false',
-}
+// const cookeOption = {
+//   httpOnly : true,
+//   sameSite : process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+//   secure : process.env.NODE_ENV === 'production' ? 'true' : 'false',
+// }
 async function run() {
   try {
 
@@ -79,12 +79,12 @@ async function run() {
         expiresIn: '7days',
       })
       res 
-      .cookie('token', token, cookeOption,
-      //   {
-      //   httpOnly : true,
-      //   secure : process.env.NODE_ENV === 'production',
-      //   sameSite : process.env.NODE_ENV === 'production' ? 'none' : 'strict',
-      // }
+      .cookie('token', token,
+        {
+        httpOnly : true,
+        secure : process.env.NODE_ENV === 'production',
+        sameSite : process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+      }
     )
       .send({success : true});
     })

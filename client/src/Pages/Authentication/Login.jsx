@@ -24,7 +24,7 @@ const Login = () => {
       try{
         const result = await signInWithGoogle()
         // jwt
-        console.log(result.user)
+        // console.log(result.user)
         const {data} = await axiosSecure.post(`/jwt`,{
             email: result?.user?.email, 
            })
@@ -43,14 +43,14 @@ const Login = () => {
       const form = e.target
       const email=form.email.value
       const pass = form.password.value
-      console.log({email,pass})
+      // console.log({email,pass})
 
       try{
         // user login 
         const result = await signIn(email, pass)
  
         // jwt
-        console.log(result.user)
+        // console.log(result.user)
         const {data} = await axiosSecure.post(`/jwt`,{
             email: result?.user?.email, 
            })

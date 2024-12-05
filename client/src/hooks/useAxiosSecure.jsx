@@ -14,11 +14,10 @@ const useAxiosSecure = () => {
     // Response interceptors
     axiosSecure.interceptors.response.use(
         res => {
-            // console.log('Kaj hoi te se', res);
             return res;
         },
         async error => {
-            console.log('Error from interceptor', error.response)
+            // console.log('Error from interceptor', error.response)
             if(error.response.status === 401 || error.response.status === 403){
                 await logOut()
                 navigate('/login')

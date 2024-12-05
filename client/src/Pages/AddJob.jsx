@@ -10,7 +10,7 @@ const AddJob = () => {
     // const {user}=useContext(AuthContext)
     const {user} = useAuth();
     const axiosSecure = useAxiosSecure();
-    const navigate  = useNavigate()
+    const navigate  = useNavigate()    
 
     const [startDate, setStartDate] = useState(new Date());
     

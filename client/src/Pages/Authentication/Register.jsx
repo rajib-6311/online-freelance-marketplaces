@@ -33,12 +33,12 @@ const Register = () => {
       const name =form.name.value
       const photo =form.photo.value
       const pass = form.password.value
-      console.log({email,pass,name,photo})
+      // console.log({email,pass,name,photo})
 
       try{
         // user registration 
         const result = await createUser(email, pass)
-        console.log(result)
+        // console.log(result)
         await updateUserProfile(name, photo)
         setUser({...result?.user, photoURL: photo , displayName: name})
 
@@ -62,7 +62,7 @@ const Register = () => {
       try{
         const result = await signInWithGoogle()
         // jwt
-        console.log(result.user)
+        // console.log(result.user)
         const {data} = await axiosSecure.post(`/jwt`,{
             email: result?.user?.email, 
            }, {withCredentials: true})
