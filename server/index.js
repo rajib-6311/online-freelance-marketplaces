@@ -11,7 +11,13 @@ const port = process.env.PORT || 5000;
 
 
 const corsOptions ={
-    origin: ['http://localhost:5173', 'http://localhost:5174'],
+    origin: [
+      'http://localhost:5173', 
+      'http://localhost:5174',
+      'online-freelance-marketplace.web.app', 
+      'https://online-freelance-marketplace.firebaseapp.com',
+      
+    ],
     credentials: true,
     optionSuccessStatus: 200,
 }
@@ -53,6 +59,11 @@ const client = new MongoClient(uri, {
   }
 });
 
+const cookeOption = {
+  httpOnly : true,
+  sameSite : process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+  secure : process.env.NODE_ENV === 'production' ? 'true' : 'false',
+}
 async function run() {
   try {
 
@@ -68,11 +79,13 @@ async function run() {
         expiresIn: '7days',
       })
       res 
-      .cookie('token', token, {
-        httpOnly : true,
-        secure : process.env.NODE_ENV === 'production',
-        sameSite : process.env.NODE_ENV === 'production' ? 'none' : 'strict',
-      })
+      .cookie('token', token, cookeOption,
+      //   {
+      //   httpOnly : true,
+      //   secure : process.env.NODE_ENV === 'production',
+      //   sameSite : process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+      // }
+    )
       .send({success : true});
     })
 
@@ -81,7 +94,7 @@ async function run() {
       res 
       .clearCookie('token', {
         httpOnly : true,
-        secure : process.env.NODE_ENV === 'production',
+        secure : process.env.NODE_ENV === 'production' ? 'true' : 'false',
         sameSite : process.env.NODE_ENV === 'production' ? 'none' : 'strict',
         maxAge : 0,
       })
@@ -248,10 +261,6 @@ async function run() {
       res.send({count})
     })
 
-
-    
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
